@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cambio de estados con bloqueo por video</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      color: white;
+      font-family: sans-serif;
+    }
+
+    .container {
+      position: relative;
+      width: 800px;
+      height: 450px;
+    }
+
+    video, img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    video.active, img.active {
+      opacity: 1;
+    }
+
+    .hint {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- ESTADO 0 → VIDEO -->
+    <video id="vid1" src="estado0.mp4" autoplay muted></video>
+
+    <!-- ESTADO 1 → IMAGEN -->
+    <img id="img1" src="f1.png">
+
+    <!-- ESTADO 2 → VIDEO -->
+    <video id="vid2" src="estado2.mp4" autoplay muted></video>
+
+     <!-- ESTADO 3 → VIDEO -->
+    <video id="vid3" src="estado3.mp4" autoplay muted></video>
+     <!-- ESTADO 4 → VIDEO -->
+    <video id="vid4" src="estado4.mp4" autoplay muted></video>
+     <!-- ESTADO 5 → VIDEO -->
+    <video id="vid5" src="estado5.mp4" autoplay muted></video>
+     <!-- ESTADO 6 → VIDEO -->
+    <video id="vid6" src="estado6.mp4" autoplay muted></video>
+     <!-- ESTADO 7 → VIDEO -->
+    <video id="vid7" src="estado7.mp4" autoplay muted></video>
+     <!-- ESTADO 8 → VIDEO -->
+    <video id="vid8" src="estado8.mp4" autoplay muted></video>
+     <!-- ESTADO 9 → VIDEO -->
+    <video id="vid9" src="estado9.mp4" autoplay muted></video>
+     <!-- ESTADO 10 → VIDEO -->
+    <video id="vid10" src="estado10.mp4" autoplay muted></video>
+     <!-- ESTADO 11 → VIDEO -->
+    <video id="vid11" src="estado11.mp4" autoplay muted></video>
+
+
+
+    
+  </div>
+
+
+
+  <script>
+    // estados
+const states = [
+  document.getElementById("vid1"), // Estado 0
+  document.getElementById("img1"), // Estado 1
+  document.getElementById("vid2"), 
+  document.getElementById("vid3"),
+  document.getElementById("vid4"),
+  document.getElementById("vid5"),
+  document.getElementById("vid6"),
+  document.getElementById("vid7"),
+  document.getElementById("vid8"),
+  document.getElementById("vid9"),
+  document.getElementById("vid10"),
+  document.getElementById("vid11")
+];
+
+// Estado actual
+let index = 0;
+
+// Bloqueo 
+let inputLocked = false;
+
+// Flecha asignada a cada estado
+const stateKeys = [
+  "ArrowUp",   // Estado 0
+  "ArrowLeft",     // Estado 1
+  "ArrowRight", // Estado 2
+  "ArrowRight", // Estado 3
+ "ArrowUp", // Estado 4
+ "ArrowLeft", // Estado 5
+ "ArrowDown", // Estado 6
+ "ArrowRight", // Estado 7
+ "ArrowLeft", // Estado 8
+ "ArrowDown", // Estado 9
+ "ArrowRight", // Estado 10
+];
+
+// Mostrar/ocultar estados 
+function updateStates() {
+  states.forEach((el, i) => {
+    el.classList.toggle("active", i === index);
+
+    if (i === index) {
+
+      if (el.tagName === "VIDEO") {
+        inputLocked = true;       // bloquear inputs
+        el.currentTime = 0;       // reiniciar video
+        el.play();                // reproducir
+
+        el.onended = () => {
+          inputLocked = false;    // desbloquear cuando termine
+        };
+
+      } else {
+        // Si es imagen → no bloquear
+        inputLocked = false;
+      }
+    }
+  });
+}
+
+// Evento de teclado para avanzar estados
+document.addEventListener("keydown", (e) => {
+
+  // Si está bloqueado → ignorar teclas
+  if (inputLocked) return;
+
+  // Si la tecla coincide con la asignada para este estado…
+  if (e.key === stateKeys[index]) {
+    index = (index + 1) % states.length;
+    updateStates();
+  }
+
+});
+
+// Activar estado inicial
+updateStates();
+  </script>
+
+</body>
+</html>
